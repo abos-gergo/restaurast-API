@@ -1,39 +1,39 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const restaurantModel = require('../models/restaurant.js');
+const restaurantModel = require('../model/restaurant')
 
-router.post('/', async (req, res) => {
-  const data = new restaurantModel(req.body);
-  try {
-    const dataToSave = await data.save();
-    res.status(200).json(dataToSave)
-  }
-  catch (error) {
-    res.status(400).json({ message: error.message })
-  }
-})
-
-router.get('/restaurants', async (req, res) => {
-  try {
+router.get('/', async (req, res) => {
+    try{
     const data = await restaurantModel.find();
-    console.log(res.json(data));
-  }
-  catch (error) {
-    res.status(400).json({ message: error.message })
-  }
-})
+    res.json(data)
+    }
+    catch(error){
+    res.status(500).json({message: error.message})
+    }
+   })
 
-router.get('/restaurants/:id', async (req, res) => {
-  try {
+   router.get('/:id', async (req, res) => {
+    try{
     const data = await restaurantModel.findById(req.params.id);
-    console.log(res.json(data));
-  }
-  catch (error) {
-    res.status(400).json({ message: error.message })
-  }
-})
+    res.json(data)
+    }
+    catch(error){
+    res.status(500).json({message: error.message})
+    }
+   })
 
-router.patch('/restaurants/update/:id', async (req, res) => {
+   router.post('/', async (req, res) => {
+        const data = new restaurantModel(req.body)
+        try{
+        const dataToSave = await data.save();
+        res.status(201).json(dataToSave)
+        }
+        catch(error){
+        res.status(400).json({message: error.message})
+        }
+   })
+
+   router.patch('/:id', async (req, res) => {
     try {
     const id = req.params.id;
     const updatedData = req.body;
@@ -45,17 +45,22 @@ router.patch('/restaurants/update/:id', async (req, res) => {
     }
     catch (error) {
     res.status(400).json({ message: error.message })
-    };
-})
+    }
+   })
 
-router.delete("/:id", async (req, res) => {
-  try {
+   router.delete('/:id', async (req, res) => {
+    try {
     const id = req.params.id;
     const data = await restaurantModel.findByIdAndDelete(id)
-    res.send(`User with ${data.name} name has been deleted.`)
-  } catch (error) {
-    console.log(error)
-  }
-})
+    res.send(`Document with ${data.name} has been deleted..`)
+    }
+    catch (error) {
+    res.status(400).json({ message: error.message })
+    }
+   })
+   
+   
+   
+
 
 module.exports = router;

@@ -1,28 +1,23 @@
-require("dotenv").config();
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const routes = require('./routes/restaurant');
 
-const express = require("express");
-const mongoose = require("mongoose");
-const restaurantRoutes = require("./routes/restaurant");
-
-mongoose.set("strictQuery", true);
-const connString = process.env.DATABASE_URL;
-
-mongoose.connect(connString);
-
+const mongoString = process.env.DATABASE_URL;
+mongoose.connect(mongoString);
 const database = mongoose.connection;
 
-database.on("error", (error) => {
-  console.log(error);
-});
-
-database.once("connected", (e) => {
-  console.log("Connected to database")
-});
+database.on('error', (error) => {
+    console.log(error)
+})
+database.once('connected', () => {
+    console.log('Database Connected');
+})
 
 const app = express();
-app.use(express.json())
-app.use("/api", restaurantRoutes)
+app.use(express.json());
+app.use('/', routes);
 
 app.listen(8000, () => {
-  console.log(`Server started at ${8000}`);
-});
+    console.log(`Server Started at 8000`)
+})
